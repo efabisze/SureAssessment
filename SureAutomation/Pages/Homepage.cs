@@ -5,16 +5,16 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
 
-namespace HudlLoginAutomation.Pages
+namespace SureAutomation.Pages
 {
-    class HomepageSignedIn
+    class Homepage
     {
-        readonly string test_url = "https://www.hudl.com/login";
+        readonly string test_url = "https://sure-qa-challenge.vercel.app/";
 
         private IWebDriver driver;
         private WebDriverWait wait;
 
-        public HomepageSignedIn(IWebDriver driver)
+        public Homepage(IWebDriver driver)
         {
             this.driver = driver;
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -22,9 +22,13 @@ namespace HudlLoginAutomation.Pages
             PageFactory.InitElements(driver, this);
         }
 
-        [FindsBy(How = How.CssSelector, Using = ".uni-avatar__content-container")]
+        [FindsBy(How = How.Name, Using = "postalCode")]
         [CacheLookup]
-        private IWebElement accountIcon;
+        private IWebElement postalInput;
+
+        [FindsBy(How = How.XPath, Using = "//button[normalize-space()='Get a quote']")]
+        [CacheLookup]
+        private IWebElement getQuoteBtn;
 
         // Go to the designated page
         public void GoToPage()
@@ -38,9 +42,19 @@ namespace HudlLoginAutomation.Pages
             return driver.Title;
         }
 
-        public void VerifyAccountIcon()
+        public void VerifyGetQuote()
         {
-            Assert.IsTrue( accountIcon.Displayed);
+            Assert.IsTrue(getQuoteBtn.Displayed);
+            Assert.IsTrue(postalInput.Displayed);
+        }
+
+        public void EnterPostal(string postalCode)
+        {
+            postalInput.SendKeys(postalCode);
+        }
+        public void ClickSubmit()
+        {
+            getQuoteBtn.Click();
         }
     }
 }
